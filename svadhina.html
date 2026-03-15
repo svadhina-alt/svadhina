@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVADHINA — Research on AI, Governance, and Public Policy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --navy:#0F1E3A;--navy-700:#152b54;--navy-600:#1a3464;
+  --blue:#1E40AF;--blue-h:#1d4ed8;--blue-pale:#EFF6FF;
+  --bg:#FFFFFF;--bg2:#F5F5F5;--bg3:#ECECEC;
+  --text:#111827;--text2:#374151;--text3:#6B7280;--text4:#9CA3AF;
+  --bdr:#E5E7EB;--bdr2:#D1D5DB;
+}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'EB Garamond',serif;font-weight:500;color:var(--navy);line-height:1.18}
+h4{font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--navy)}
+p,li{font-family:'Spectral',serif;font-weight:300;font-size:1rem;line-height:1.82;color:var(--text2)}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 2rem}
+.wrapS{max-width:740px;margin:0 auto;padding:0 2rem}
+.sp{padding:5rem 0}.spS{padding:3.5rem 0}
+hr.r{border:none;border-top:1px solid var(--bdr)}
+/* BUTTONS */
+.btn{display:inline-block;font-family:'IBM Plex Sans',sans-serif;font-size:.8rem;font-weight:500;letter-spacing:.04em;padding:.6rem 1.5rem;cursor:pointer;border:none;transition:background .18s,color .18s,border-color .18s;text-decoration:none;white-space:nowrap}
+.btn:hover{text-decoration:none}
+.bS{background:var(--navy);color:#fff}.bS:hover{background:var(--navy-700);color:#fff}
+.bB{background:var(--blue);color:#fff}.bB:hover{background:var(--blue-h);color:#fff}
+.bG{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}.bG:hover{background:var(--navy);color:#fff}
+.bGB{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}.bGB:hover{background:var(--blue);color:#fff}
+.bGW{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.3)}.bGW:hover{background:rgba(255,255,255,.1);color:#fff}
+/* NAV */
+#nav{background:var(--navy);position:sticky;top:0;z-index:500;border-bottom:1px solid rgba(255,255,255,.06)}
+.navW{display:flex;align-items:center;justify-content:space-between;height:60px;max-width:1080px;margin:0 auto;padding:0 2rem}
+.navBrand{cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.navBrandN{font-family:'EB Garamond',serif;font-size:1.2rem;font-weight:500;letter-spacing:.08em;color:#fff;line-height:1}
+.navBrandS{font-family:'IBM Plex Mono',monospace;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.38)}
+.navMenu{display:flex;list-style:none;height:60px}
+.navMenu li{display:flex;align-items:center}
+.navMenu button{display:flex;align-items:center;height:60px;padding:0 .95rem;font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;font-weight:400;letter-spacing:.04em;color:rgba(255,255,255,.6);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s}
+.navMenu button:hover{color:#fff}.navMenu button.active{color:#fff;border-bottom-color:#60A5FA}
+.navHam{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:4px}
+.navHam span{display:block;width:20px;height:1.5px;background:rgba(255,255,255,.7)}
+/* PAGES */
+.page{display:none}.page.active{display:block}
+/* PAGE BANNER */
+.banner{background:var(--navy);padding:3.5rem 0 3rem;border-bottom:3px solid var(--blue)}
+.banner .kick{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:#93C5FD;display:block;margin-bottom:.7rem}
+.banner h1{color:#fff;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400}
+.banner p{color:rgba(255,255,255,.55);font-family:'Spectral',serif;font-size:.97rem;margin-top:.7rem;max-width:520px}
+/* HERO */
+.hero{background:var(--navy);padding:6.5rem 0 6rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 80px);pointer-events:none}
+.heroIn{position:relative;z-index:1}
+.heroKick{display:inline-flex;align-items:center;gap:.7rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#93C5FD;margin-bottom:1.8rem}
+.heroKick::before{content:'';display:block;width:24px;height:1px;background:#93C5FD}
+.hero h1{font-size:clamp(2.8rem,6vw,5rem);font-weight:400;letter-spacing:.04em;color:#fff;line-height:1.05;margin-bottom:.6rem}
+.heroTag{font-family:'EB Garamond',serif;font-size:clamp(1.1rem,2vw,1.4rem);font-weight:400;font-style:italic;color:rgba(255,255,255,.52);margin-bottom:1.8rem}
+.heroDesc{font-family:'Spectral',serif;font-weight:300;font-size:1.05rem;line-height:1.82;color:rgba(255,255,255,.58);max-width:580px;margin-bottom:2.5rem}
+.heroBtns{display:flex;gap:1rem;flex-wrap:wrap}
+/* SECTION HEADER */
+.secHdr{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:1rem;margin-bottom:2.5rem;border-bottom:2px solid var(--navy);flex-wrap:wrap;gap:.8rem}
+.secHdr h2{font-size:1.35rem;font-weight:600}
+.secHdrL{font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;font-weight:500;color:var(--blue);background:none;border:none;cursor:pointer;letter-spacing:.03em}
+.secHdrL:hover{text-decoration:underline}
+/* WP CARD (home) */
+.wpCard{display:grid;grid-template-columns:72px 1fr;gap:2.2rem;padding:2.2rem 0;border-bottom:1px solid var(--bdr)}
+.wpCard:last-child{border-bottom:none}
+.wpNoCol{padding-top:.2rem}
+.wpLbl{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text4);display:block;margin-bottom:.2rem}
+.wpNum{font-family:'EB Garamond',serif;font-size:3rem;font-weight:400;color:var(--bg3);line-height:1}
+.wpMeta{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin-bottom:.7rem}
+.wpMeta span{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+.wpTitle{font-family:'EB Garamond',serif;font-size:1.3rem;font-weight:500;color:var(--navy);line-height:1.32;margin-bottom:.8rem}
+.wpAbs{font-family:'Spectral',serif;font-size:.95rem;font-weight:300;line-height:1.78;color:var(--text2);margin-bottom:1.2rem}
+.wpBtns{display:flex;gap:.75rem;flex-wrap:wrap}
+/* PULLQUOTE */
+.pq{border-left:3px solid var(--navy);padding:1rem 1.5rem;margin:1.2rem 0;background:var(--bg2)}
+.pq p{font-family:'EB Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--navy);font-weight:400;line-height:1.65}
+/* AREAS */
+.areas{background:var(--bg2)}
+.areasGrid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--bdr2)}
+.area{padding:2rem 1.6rem;border-right:1px solid var(--bdr2);background:var(--bg);transition:background .18s}
+.area:last-child{border-right:none}
+.area:hover{background:var(--blue-pale)}
+.areaN{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text4);display:block;margin-bottom:1.2rem}
+.areaIcon{width:32px;height:32px;background:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
+.areaIcon svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.5}
+.areaTitle{font-family:'EB Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--navy);margin-bottom:.5rem;line-height:1.25}
+.areaDesc{font-family:'Spectral',serif;font-size:.83rem;font-weight:300;color:var(--text3);line-height:1.65}
+/* ABOUT BAND */
+.aBand{background:var(--navy);padding:5rem 0}
+.aBandG{display:grid;grid-template-columns:1fr 340px;gap:5rem;align-items:center}
+.aBand h2{color:#fff;font-size:1.9rem;font-weight:400;margin-bottom:1.1rem}
+.aBand p{color:rgba(255,255,255,.55);font-size:.97rem;margin-bottom:1.8rem}
+.fc{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:1.8rem}
+.fcI{width:52px;height:52px;background:var(--blue);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-family:'EB Garamond',serif;font-size:1.25rem;font-weight:500;color:#fff}
+.fcN{font-family:'EB Garamond',serif;font-size:1.1rem;font-weight:500;color:#fff;margin-bottom:.2rem}
+.fcR{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:#93C5FD;margin-bottom:.8rem;display:block}
+.fcB{font-family:'Spectral',serif;font-size:.85rem;font-weight:300;color:rgba(255,255,255,.5);line-height:1.7}
+/* RESEARCH PAGE WP FULL */
+.wpFull{border:1px solid var(--bdr);padding:2.5rem 2.5rem 2rem;margin-bottom:1.5rem}
+.wpBadge{display:inline-block;padding:.2rem .65rem;background:var(--navy);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:1rem}
+.wpFTitle{font-size:1.6rem;font-weight:500;line-height:1.28;color:var(--navy);margin-bottom:1.2rem}
+.wpFields{display:flex;flex-wrap:wrap;gap:2rem;padding:1rem 0;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);margin-bottom:1.5rem}
+.wfL{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text4);display:block;margin-bottom:.2rem}
+.wfV{font-family:'Spectral',serif;font-size:.93rem;font-weight:300;color:var(--text)}
+.absLbl{font-family:'IBM Plex Sans',sans-serif;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.6rem;display:block}
+/* PUBS */
+.pubSec{padding:2.5rem 0;border-bottom:1px solid var(--bdr)}
+.pubSec:last-of-type{border-bottom:none}
+.pubSecT{font-family:'IBM Plex Sans',sans-serif;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--navy);padding-bottom:.6rem;border-bottom:1px solid var(--bdr2);margin-bottom:1.2rem}
+.pubEmpty{padding:2rem;background:var(--bg2);border:1px dashed var(--bdr2);text-align:center}
+.pubEmpty p{font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;font-weight:400;color:var(--text3)}
+/* CONTRIBUTE */
+.cGrid{display:grid;grid-template-columns:1fr 320px;gap:5rem;align-items:start}
+.fgrp{margin-bottom:1.3rem}
+.flbl{display:block;font-family:'IBM Plex Sans',sans-serif;font-size:.75rem;font-weight:500;color:var(--text);margin-bottom:.45rem;letter-spacing:.02em}
+.flbl span{font-weight:400;color:var(--text3)}
+.fi,.fta{width:100%;padding:.7rem .9rem;font-family:'Spectral',serif;font-size:.95rem;font-weight:300;color:var(--text);background:var(--bg);border:1px solid var(--bdr2);outline:none;transition:border-color .18s,box-shadow .18s}
+.fi:focus,.fta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,64,175,.07)}
+.fta{min-height:130px;resize:vertical}
+.fileBtn{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border:1px dashed var(--bdr2);cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;color:var(--text3);transition:border-color .18s,background .18s}
+.fileBtn:hover{border-color:var(--blue);background:var(--blue-pale);color:var(--blue)}
+.fileBtn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0}
+#fFile{display:none}
+.guideBox{background:var(--bg2);border-left:3px solid var(--navy);padding:1.8rem;margin-bottom:1.3rem}
+.guideBox h4{font-size:.82rem;margin-bottom:1rem;letter-spacing:.04em}
+.guideList{list-style:none;display:flex;flex-direction:column;gap:.65rem}
+.guideList li{font-family:'Spectral',serif;font-size:.87rem;font-weight:300;color:var(--text2);line-height:1.58;padding-left:1.1rem;position:relative}
+.guideList li::before{content:'—';position:absolute;left:0;color:var(--navy);font-weight:400}
+/* ABOUT */
+.aboutL{display:grid;grid-template-columns:1fr 300px;gap:5rem;align-items:start}
+.etymBox{background:var(--navy);padding:2rem;margin-bottom:2.5rem}
+.etymW{font-family:'EB Garamond',serif;font-size:2rem;font-weight:400;color:#93C5FD;display:block;line-height:1;margin-bottom:.3rem}
+.etymS{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.18em;color:rgba(255,255,255,.35);display:block;margin-bottom:.7rem}
+.etymBox p{font-family:'Spectral',serif;font-size:.9rem;font-weight:300;color:rgba(255,255,255,.55);line-height:1.72}
+.aboutMain h2{font-size:1.75rem;font-weight:400;margin-bottom:1.2rem}
+.aboutMain h2+h2,.aboutMain h2~h2{margin-top:2.2rem}
+.aboutMain p{margin-bottom:1.1rem}
+.sbBox{border:1px solid var(--bdr);padding:1.6rem;margin-bottom:1.2rem}
+.sbBox h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;padding-bottom:.6rem;border-bottom:1px solid var(--bdr2);margin-bottom:1rem}
+.sbList{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.sbList li{font-family:'Spectral',serif;font-size:.88rem;font-weight:300;color:var(--text2);padding-left:1rem;position:relative;line-height:1.5}
+.sbList li::before{content:'·';position:absolute;left:0;color:var(--navy);font-weight:700}
+.founderP{display:flex;gap:1.5rem;align-items:flex-start;border:1px solid var(--bdr);padding:2rem;margin-top:1.5rem}
+.founderI{width:54px;height:54px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'EB Garamond',serif;font-size:1.2rem;color:#fff;font-weight:500}
+/* CONTACT */
+.ctL{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ciRow{padding:1.2rem 0;border-bottom:1px solid var(--bdr)}
+.ciRow:first-of-type{border-top:1px solid var(--bdr)}
+.ciLbl{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text4);display:block;margin-bottom:.3rem}
+.ciVal{font-family:'Spectral',serif;font-size:.97rem;font-weight:300;color:var(--text)}
+.socRow{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1px solid var(--bdr);margin-bottom:.6rem;font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;font-weight:400;color:var(--text2);transition:border-color .18s,color .18s,background .18s}
+.socRow:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-pale);text-decoration:none}
+.socRow svg{width:15px;height:15px;fill:currentColor;flex-shrink:0}
+/* SUCCESS */
+.sOk{display:none;margin-top:1rem;padding:1rem 1.2rem;background:#F0FDF4;border:1px solid #BBF7D0;border-left:3px solid #16A34A}
+.sOk p{font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;font-weight:500;color:#15803D}
+/* FOOTER */
+footer{background:#07111F;border-top:3px solid var(--navy-700);padding:3.5rem 0 0}
+.ftG{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:3rem;padding-bottom:3rem}
+.ftBN{font-family:'EB Garamond',serif;font-size:1.2rem;font-weight:500;letter-spacing:.08em;color:#fff;margin-bottom:.35rem}
+.ftBD{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.28);line-height:1.7}
+.ftCL{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-bottom:.9rem}
+.ftCol a,.ftCol button{display:block;font-family:'IBM Plex Sans',sans-serif;font-size:.8rem;font-weight:300;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;padding:0;text-align:left;text-decoration:none;margin-bottom:.5rem;transition:color .15s}
+.ftCol a:hover,.ftCol button:hover{color:#fff;text-decoration:none}
+.ftBot{border-top:1px solid rgba(255,255,255,.06);padding:1.4rem 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.ftCopy{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:.1em;color:rgba(255,255,255,.25)}
+/* REVEAL */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+/* RESPONSIVE */
+@media(max-width:940px){
+  .navMenu{display:none}
+  .navMenu.open{display:flex;flex-direction:column;height:auto;position:absolute;top:60px;left:0;right:0;background:var(--navy-700);border-top:1px solid rgba(255,255,255,.08);z-index:600}
+  .navMenu.open li{width:100%}
+  .navMenu.open button{height:46px;padding:0 1.5rem;width:100%;border-bottom:none;border-right:none}
+  .navHam{display:flex}
+  #nav{position:relative}
+  .areasGrid{grid-template-columns:repeat(2,1fr)}
+  .area{border-bottom:1px solid var(--bdr2)}
+  .aBandG{grid-template-columns:1fr;gap:2.5rem}
+  .wpCard{grid-template-columns:1fr;gap:.5rem}
+  .wpNoCol{display:none}
+  .cGrid{grid-template-columns:1fr;gap:3rem}
+  .aboutL{grid-template-columns:1fr;gap:2.5rem}
+  .ctL{grid-template-columns:1fr;gap:3rem}
+  .ftG{grid-template-columns:1fr 1fr;gap:2rem}
+  .wpFull{padding:1.8rem}
+}
+@media(max-width:560px){
+  .areasGrid{grid-template-columns:1fr}
+  .area{border-right:none}
+  .hero h1{font-size:2.4rem}
+  .ftG{grid-template-columns:1fr}
+  .sp{padding:3.5rem 0}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="navW">
+    <div class="navBrand" onclick="show('home')">
+      <span class="navBrandN">SVADHINA</span>
+      <span class="navBrandS">AI · Governance · Public Policy</span>
+    </div>
+    <ul class="navMenu" id="navMenu">
+      <li><button id="nb-home"    onclick="show('home')"    class="active">Home</button></li>
+      <li><button id="nb-research"onclick="show('research')"              >Research</button></li>
+      <li><button id="nb-pubs"    onclick="show('pubs')"                  >Publications</button></li>
+      <li><button id="nb-contrib" onclick="show('contrib')"               >Contribute</button></li>
+      <li><button id="nb-about"   onclick="show('about')"                 >About</button></li>
+      <li><button id="nb-contact" onclick="show('contact')"               >Contact</button></li>
+    </ul>
+    <button class="navHam" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="pg-home">
+  <div class="hero">
+    <div class="wrap heroIn">
+      <div class="heroKick">Independent Research Initiative</div>
+      <h1>SVADHINA</h1>
+      <p class="heroTag">Research on Artificial Intelligence, Governance, and Public Policy</p>
+      <p class="heroDesc">Svadhina is an independent research initiative exploring how artificial intelligence is transforming public institutions, governance systems, and the future of the state.</p>
+      <div class="heroBtns">
+        <button class="btn bB" onclick="show('research')">View Research</button>
+        <button class="btn bGW" onclick="show('about')">About Svadhina</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sp">
+    <div class="wrap">
+      <div class="secHdr rv">
+        <h2>Latest Research</h2>
+        <button class="secHdrL" onclick="show('research')">All Working Papers →</button>
+      </div>
+      <div class="wpCard rv">
+        <div class="wpNoCol">
+          <span class="wpLbl">WP</span>
+          <span class="wpNum">01</span>
+        </div>
+        <div>
+          <div class="wpMeta">
+            <span>SVADHINA Working Paper No. 1</span>
+            <span>Swastik Sharma</span>
+            <span>2026</span>
+            <span>AI Governance</span>
+          </div>
+          <h3 class="wpTitle">Automating the State: Promise, Peril, and the Politics of AI in Public Administration</h3>
+          <p class="wpAbs">This paper examines the integration of artificial intelligence into public administration — from welfare algorithms to automated decision-making systems — analysing accountability deficits, erosion of due process, and pathways to rights-respecting governance. Drawing on case studies including the Netherlands Child Benefit Scandal and Australia's Robodebt scheme, it argues that governments must develop accountability frameworks commensurate with the scale and opacity of AI systems deployed in their name.</p>
+          <div class="wpBtns">
+            <button class="btn bS" onclick="show('research')">Read Paper</button>
+            <button class="btn bGB">Download PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="r" style="max-width:1080px;margin:0 auto;">
+
+  <div class="areas sp">
+    <div class="wrap">
+      <div class="secHdr rv"><h2>Research Areas</h2></div>
+      <div class="areasGrid rv">
+        <div class="area">
+          <span class="areaN">01</span>
+          <div class="areaIcon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx=".5"/><rect x="14" y="3" width="7" height="7" rx=".5"/><rect x="3" y="14" width="7" height="7" rx=".5"/><rect x="14" y="14" width="7" height="7" rx=".5"/></svg></div>
+          <h3 class="areaTitle">AI Governance</h3>
+          <p class="areaDesc">Frameworks for accountable, transparent, and rights-respecting deployment of AI systems in public institutions.</p>
+        </div>
+        <div class="area">
+          <span class="areaN">02</span>
+          <div class="areaIcon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <h3 class="areaTitle">Digital State Capacity</h3>
+          <p class="areaDesc">How digital public infrastructure reshapes state institutions, welfare delivery, and administrative capacity.</p>
+        </div>
+        <div class="area">
+          <span class="areaN">03</span>
+          <div class="areaIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <h3 class="areaTitle">Algorithmic Accountability</h3>
+          <p class="areaDesc">Analysing how automated decision systems affect democratic accountability, legal rights, and administrative justice.</p>
+        </div>
+        <div class="area">
+          <span class="areaN">04</span>
+          <div class="areaIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+          <h3 class="areaTitle">Technology &amp; Public Policy</h3>
+          <p class="areaDesc">Comparative analysis of AI regulatory frameworks, digital rights legislation, and governance instruments.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aBand">
+    <div class="wrap">
+      <div class="aBandG">
+        <div class="rv">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);display:block;margin-bottom:1rem;">About the Initiative</span>
+          <h2>About SVADHINA</h2>
+          <p>Svadhina is an independent research initiative dedicated to studying the intersection of artificial intelligence, governance, and public policy. The initiative focuses on how emerging technologies reshape state capacity, public administration, and democratic institutions.</p>
+          <button class="btn bGW" onclick="show('about')">Learn More →</button>
+        </div>
+        <div class="rv d2">
+          <div class="fc">
+            <div class="fcI">SS</div>
+            <div class="fcN">Swastik Sharma</div>
+            <span class="fcR">Founder – SVADHINA</span>
+            <p class="fcB">Independent policy researcher focusing on AI governance, digital public administration, and the future of state institutions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESEARCH ═══ -->
+<div class="page" id="pg-research">
+  <div class="banner">
+    <div class="wrapS">
+      <span class="kick">Working Papers</span>
+      <h1>SVADHINA Working Papers</h1>
+      <p>Peer-reviewed research on artificial intelligence, governance, and the future of democratic institutions.</p>
+    </div>
+  </div>
+  <div class="sp">
+    <div class="wrapS">
+      <div class="wpFull rv">
+        <span class="wpBadge">Working Paper No. 1</span>
+        <h2 class="wpFTitle">Automating the State: Promise, Peril, and the Politics of AI in Public Administration</h2>
+        <div class="wpFields">
+          <div><span class="wfL">Author</span><span class="wfV">Swastik Sharma</span></div>
+          <div><span class="wfL">Year</span><span class="wfV">2026</span></div>
+          <div><span class="wfL">Series</span><span class="wfV">SVADHINA Working Papers</span></div>
+          <div><span class="wfL">Area</span><span class="wfV">AI Governance · Public Administration</span></div>
+        </div>
+        <span class="absLbl">Abstract</span>
+        <p class="wpAbs">Governments around the world are turning to artificial intelligence to reform how they deliver services, make decisions, and govern populations. This paper offers a systematic analysis of AI integration in public administration — examining both the transformative potential and the structural risks of algorithmic governance. Drawing on case studies including the Netherlands Kinderopvangtoeslag (Child Benefit) scandal and Australia's Robodebt scheme, it demonstrates how automated decision-making can systematically harm citizens when accountability mechanisms fail to keep pace with technological change. The paper analyses the political economy of AI adoption in public institutions, arguing that opacity, speed, and scale create accountability vacuums incompatible with democratic governance. It concludes by proposing an integrated framework covering transparency requirements, human oversight mandates, and redress mechanisms for rights-respecting AI in democratic states.</p>
+        <div class="pq"><p>"Citizens can vote out politicians — they cannot vote out an algorithm."</p></div>
+        <div class="wpBtns" style="margin-top:1.5rem;">
+          <button class="btn bS">Read Full Paper</button>
+          <button class="btn bGB">Download PDF</button>
+          <button class="btn bG">Cite This Paper</button>
+        </div>
+      </div>
+      <div style="border:1px dashed var(--bdr2);padding:2rem;text-align:center;" class="rv">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text4);display:block;margin-bottom:.6rem;">Forthcoming · 2026</span>
+        <p style="font-family:'IBM Plex Sans',sans-serif;font-size:.88rem;font-weight:400;color:var(--text3);">Additional working papers in preparation. <button onclick="show('contrib')" style="background:none;border:none;cursor:pointer;color:var(--blue);font-size:.88rem;font-family:inherit;">Contribute a paper →</button></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PUBLICATIONS ═══ -->
+<div class="page" id="pg-pubs">
+  <div class="banner">
+    <div class="wrapS">
+      <span class="kick">Publications</span>
+      <h1>Publications</h1>
+      <p>Policy briefs, essays, and commentary on AI, governance, and public institutions.</p>
+    </div>
+  </div>
+  <div class="sp">
+    <div class="wrapS">
+      <div class="pubSec rv">
+        <div class="pubSecT">Policy Briefs</div>
+        <div class="pubEmpty"><p>Concise analyses (1,500–3,000 words) on specific governance or regulatory questions. First brief forthcoming in 2026.</p></div>
+      </div>
+      <div class="pubSec rv">
+        <div class="pubSecT">Essays</div>
+        <div class="pubEmpty"><p>Long-form essays exploring ideas at the intersection of AI, the state, and democratic theory. First essay forthcoming in 2026.</p></div>
+      </div>
+      <div class="pubSec rv">
+        <div class="pubSecT">Commentary</div>
+        <div class="pubEmpty"><p>Short commentary and analysis responding to current policy developments. First commentary forthcoming in 2026.</p></div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--bdr);padding:2rem;text-align:center;margin-top:1.5rem;" class="rv">
+        <p style="font-family:'IBM Plex Sans',sans-serif;font-size:.9rem;font-weight:400;color:var(--text2);margin-bottom:1.2rem;">Researchers, students, and policy thinkers are invited to submit work for publication.</p>
+        <button class="btn bS" onclick="show('contrib')">Submission Guidelines →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTRIBUTE ═══ -->
+<div class="page" id="pg-contrib">
+  <div class="banner">
+    <div class="wrapS">
+      <span class="kick">Open Submissions</span>
+      <h1>Contribute to SVADHINA</h1>
+      <p>Svadhina welcomes contributions from researchers, students, and policy thinkers interested in artificial intelligence, governance, and public policy.</p>
+    </div>
+  </div>
+  <div class="sp">
+    <div class="wrap">
+      <div class="cGrid">
+        <div class="rv">
+          <h2 style="font-size:1.4rem;font-weight:500;margin-bottom:1.8rem;">Submit Your Work</h2>
+          <form onsubmit="doSubmit(event,'c-ok')">
+            <div class="fgrp"><label class="flbl" for="fName">Full Name</label><input type="text" id="fName" class="fi" placeholder="Your full name" required></div>
+            <div class="fgrp"><label class="flbl" for="fEmail">Email Address</label><input type="email" id="fEmail" class="fi" placeholder="you@institution.edu" required></div>
+            <div class="fgrp"><label class="flbl" for="fInst">Institution <span>(Optional)</span></label><input type="text" id="fInst" class="fi" placeholder="University, think tank, or organisation"></div>
+            <div class="fgrp"><label class="flbl" for="fTitle">Title of Submission</label><input type="text" id="fTitle" class="fi" placeholder="Working paper or essay title" required></div>
+            <div class="fgrp"><label class="flbl" for="fAbs">Abstract / Idea Summary <span>(150–300 words)</span></label><textarea id="fAbs" class="fta" style="min-height:155px;" placeholder="Provide a 150–300 word abstract summarising your research question, methodology, and key findings." required></textarea></div>
+            <div class="fgrp">
+              <label class="flbl">File Upload <span>(Optional — PDF or DOCX)</span></label>
+              <label for="fFile" class="fileBtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span id="fFileLbl">Click to attach full paper (optional)</span></label>
+              <input type="file" id="fFile" accept=".pdf,.doc,.docx">
+            </div>
+            <button type="submit" class="btn bS" style="width:100%;padding:.85rem;font-size:.82rem;letter-spacing:.06em;">Submit for Review</button>
+          </form>
+          <div class="sOk" id="c-ok"><p>✓ Submission received. We will review it and respond within 2–3 weeks.</p></div>
+        </div>
+        <div class="rv d2">
+          <div class="guideBox">
+            <h4>Submission Guidelines</h4>
+            <ul class="guideList">
+              <li>Topic must relate to AI, governance, or public policy</li>
+              <li>Include a 150–300 word abstract</li>
+              <li>Full paper optional at initial stage</li>
+              <li>Working papers: 5,000–12,000 words</li>
+              <li>Policy briefs: 1,500–3,000 words</li>
+              <li>Essays and commentary: 800–3,000 words</li>
+              <li>All submissions reviewed before publication</li>
+              <li>Open-access publication principles apply</li>
+            </ul>
+          </div>
+          <div class="guideBox" style="border-left-color:var(--blue);">
+            <h4>Preferred Topics</h4>
+            <ul class="guideList">
+              <li>Algorithmic decision-making in public administration</li>
+              <li>AI regulation and comparative governance</li>
+              <li>Digital welfare systems and social protection</li>
+              <li>Democratic accountability and automation</li>
+              <li>AI and state capacity in developing economies</li>
+              <li>Digital rights, surveillance, and civil liberties</li>
+            </ul>
+          </div>
+          <div style="background:var(--bg2);border:1px solid var(--bdr);padding:1.5rem;">
+            <p style="font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;font-weight:400;color:var(--text3);margin-bottom:.9rem;">Unsure if your topic fits? Contact us before submitting.</p>
+            <button class="btn bG" onclick="show('contact')" style="width:100%;">Contact Us →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="page" id="pg-about">
+  <div class="banner">
+    <div class="wrapS"><span class="kick">About</span><h1>About SVADHINA</h1></div>
+  </div>
+  <div class="sp">
+    <div class="wrap">
+      <div class="aboutL">
+        <div class="aboutMain rv">
+          <div class="etymBox">
+            <span class="etymW">स्वाधीन</span>
+            <span class="etymS">Svādhīna — Sanskrit · sva (self) + adhīna (under authority of)</span>
+            <p>Meaning <em>self-governed</em>, <em>free</em>, or <em>autonomous</em> — one who is under their own authority. Applied here: the pursuit of self-determining, rights-grounded governance in the age of artificial intelligence.</p>
+          </div>
+          <h2>The Initiative</h2>
+          <p>Svadhina is an independent research initiative dedicated to studying the intersection of artificial intelligence, governance, and public policy. The initiative focuses on how emerging technologies reshape state capacity, public administration, and democratic institutions.</p>
+          <p>We produce rigorous, evidence-based research that bridges academic scholarship and practical policy. Our work is oriented toward India and South Asia while engaging with comparative international governance and regulatory developments.</p>
+          <p>Svadhina is non-partisan and maintains full editorial independence. We do not accept funding that would compromise the independence of our research or editorial positions.</p>
+          <h2>Why This Research Matters</h2>
+          <p>Governments worldwide are adopting AI systems at speed — for welfare delivery, law enforcement, immigration, taxation, and public health. These decisions carry profound consequences for citizens, institutions, and the future of democratic accountability.</p>
+          <p>Yet the policy frameworks, legal instruments, and institutional capacities needed to govern AI in the public sector remain underdeveloped. Svadhina exists to help close that gap through independent, rigorous scholarship.</p>
+          <h2>Founder</h2>
+          <div class="founderP rv">
+            <div class="founderI">SS</div>
+            <div>
+              <h3 style="font-size:1.1rem;font-weight:500;margin-bottom:.2rem;">Swastik Sharma</h3>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:.8rem;">Founder – SVADHINA</span>
+              <p>Independent policy researcher focusing on AI governance, digital public administration, and the future of state institutions. Swastik's research interests span the political economy of AI adoption in government, algorithmic accountability mechanisms, and the governance of digital public infrastructure in South Asia.</p>
+            </div>
+          </div>
+        </div>
+        <div class="rv d2">
+          <div class="sbBox"><h4>Focus Areas</h4><ul class="sbList"><li>AI Governance &amp; Regulation</li><li>Digital State Capacity</li><li>Algorithmic Accountability</li><li>Technology &amp; Democracy</li><li>Digital Public Infrastructure</li><li>AI Policy in South Asia</li></ul></div>
+          <div class="sbBox"><h4>Publication Types</h4><ul class="sbList"><li>Working Papers</li><li>Policy Briefs</li><li>Long-form Essays</li><li>Commentary &amp; Analysis</li></ul></div>
+          <div class="sbBox"><h4>Principles</h4><ul class="sbList"><li>Editorial independence</li><li>Open-access publication</li><li>Evidence-based analysis</li><li>Non-partisan research</li><li>Rigorous peer review</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div class="page" id="pg-contact">
+  <div class="banner">
+    <div class="wrapS"><span class="kick">Contact</span><h1>Get in Touch</h1><p>For research inquiries, collaborations, media requests, or general correspondence.</p></div>
+  </div>
+  <div class="sp">
+    <div class="wrap">
+      <div class="ctL">
+        <div class="rv">
+          <h3 style="font-family:'EB Garamond',serif;font-size:1.2rem;font-weight:500;margin-bottom:1.8rem;color:var(--navy);">Contact Information</h3>
+          <div class="ciRow"><span class="ciLbl">General Enquiries</span><span class="ciVal"><a href="mailto:contact@svadhina.in">contact@svadhina.in</a></span></div>
+          <div class="ciRow"><span class="ciLbl">Submissions</span><span class="ciVal"><a href="mailto:submissions@svadhina.in">submissions@svadhina.in</a></span></div>
+          <div class="ciRow"><span class="ciLbl">Location</span><span class="ciVal">Jammu / New Delhi, India</span></div>
+          <div class="ciRow"><span class="ciLbl">Response Time</span><span class="ciVal">2–5 business days</span></div>
+          <div style="margin-top:2.2rem;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text4);display:block;margin-bottom:1rem;">Follow Svadhina</span>
+            <a href="#" class="socRow"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>Twitter / X — @SvadhinaPolicy</a>
+            <a href="#" class="socRow"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn — SVADHINA</a>
+            <a href="#" class="socRow"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>GitHub — Svadhina Research</a>
+          </div>
+        </div>
+        <div class="rv d1">
+          <h3 style="font-family:'EB Garamond',serif;font-size:1.2rem;font-weight:500;margin-bottom:1.8rem;color:var(--navy);">Send a Message</h3>
+          <form onsubmit="doSubmit(event,'ct-ok')">
+            <div class="fgrp"><label class="flbl" for="mName">Name</label><input type="text" id="mName" class="fi" placeholder="Your name" required></div>
+            <div class="fgrp"><label class="flbl" for="mEmail">Email</label><input type="email" id="mEmail" class="fi" placeholder="your@email.com" required></div>
+            <div class="fgrp"><label class="flbl" for="mSubj">Subject</label><input type="text" id="mSubj" class="fi" placeholder="Research inquiry / Media / Collaboration..."></div>
+            <div class="fgrp"><label class="flbl" for="mBody">Message</label><textarea id="mBody" class="fta" style="min-height:150px;" placeholder="Write your message here..." required></textarea></div>
+            <button type="submit" class="btn bS" style="width:100%;padding:.85rem;">Send Message</button>
+          </form>
+          <div class="sOk" id="ct-ok"><p>✓ Message sent. We will respond within a few business days.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="ftG">
+      <div>
+        <div class="ftBN">SVADHINA</div>
+        <div class="ftBD">Research on Artificial Intelligence,<br>Governance, and Public Policy.<br>Independent · Non-Partisan · India-Based</div>
+      </div>
+      <div class="ftCol">
+        <span class="ftCL">Pages</span>
+        <button onclick="show('home')">Home</button>
+        <button onclick="show('research')">Research</button>
+        <button onclick="show('pubs')">Publications</button>
+        <button onclick="show('contrib')">Contribute</button>
+      </div>
+      <div class="ftCol">
+        <span class="ftCL">&nbsp;</span>
+        <button onclick="show('about')">About</button>
+        <button onclick="show('contact')">Contact</button>
+        <a href="mailto:contact@svadhina.in">contact@svadhina.in</a>
+      </div>
+    </div>
+    <div class="ftBot">
+      <span class="ftCopy">© 2026 SVADHINA. All rights reserved.</span>
+      <span class="ftCopy">Research on AI, Governance, and Public Policy</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const pages=['home','research','pubs','contrib','about','contact'];
+const nbs={home:'nb-home',research:'nb-research',pubs:'nb-pubs',contrib:'nb-contrib',about:'nb-about',contact:'nb-contact'};
+function show(id){
+  pages.forEach(p=>{
+    document.getElementById('pg-'+p).classList.remove('active');
+    const b=document.getElementById(nbs[p]);if(b)b.classList.remove('active');
+  });
+  document.getElementById('pg-'+id).classList.add('active');
+  const b=document.getElementById(nbs[id]);if(b)b.classList.add('active');
+  document.getElementById('navMenu').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(initRv,80);
+}
+document.getElementById('ham').addEventListener('click',()=>document.getElementById('navMenu').classList.toggle('open'));
+function initRv(){
+  const els=document.querySelectorAll('.page.active .rv:not(.in)');
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  els.forEach(el=>io.observe(el));
+}
+initRv();
+document.getElementById('fFile').addEventListener('change',function(){
+  document.getElementById('fFileLbl').textContent=this.files[0]?this.files[0].name:'Click to attach full paper (optional)';
+});
+function doSubmit(e,id){
+  e.preventDefault();
+  document.getElementById(id).style.display='block';
+  e.target.reset();
+  if(id==='c-ok')document.getElementById('fFileLbl').textContent='Click to attach full paper (optional)';
+}
+</script>
+</body>
+</html>
