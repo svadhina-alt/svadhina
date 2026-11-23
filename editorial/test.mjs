@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import worker from './src/index.mjs';
-import {Miniflare} from 'miniflare';
+import {getPlatformProxy} from 'wrangler';
 import {readFile} from 'node:fs/promises';
 import {ManuscriptStore} from './src/storage.mjs';
-const runtime=new Miniflare({modules:true,script:'export default {fetch(){return new Response()}}',d1Databases:['DB'],compatibilityDate:'2026-02-01'});
+const runtime=await getPlatformProxy({persist:false,remoteBindings:false});
 try {
-const db=await runtime.getD1Database('DB');
+const db=runtime.env.DB;
 const schema=await readFile(new URL('./migrations/0001_open_papers.sql',import.meta.url),'utf8');
 for(const sql of schema.split(';').filter(s=>s.trim()))await db.prepare(sql).run();
 const bucket=new ManuscriptStore(db);
