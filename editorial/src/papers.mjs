@@ -7,7 +7,7 @@ export async function papers(request, env, path, user) {
   const editor = user === env.EDITOR_GITHUB_ID;
   if ((path === '/api/mine' || (path === '/api/editor' && editor)) && request.method === 'GET') {
     const cursor = new URL(request.url).searchParams.get('cursor') || undefined;
-    const list = await env.BUCKET.list({prefix:'papers/',limit:50,cursor,include:['customMetadata']});
+    const list = await env.BUCKET.list({prefix:'papers/',limit:5,cursor,include:['customMetadata']});
     const visible=path==='/api/mine'?list.objects.filter(o=>o.customMetadata.owner===user):list.objects;
     return json({papers:await Promise.all(visible.map(async o=>({id:o.key.slice(7),...await readInfo(env.BUCKET,o)}))),next:list.truncated?list.cursor:null});
   }

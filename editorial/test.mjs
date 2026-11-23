@@ -1,13 +1,20 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import worker from './src/index.mjs';
-const objects=new Map();
-const bucket={
- head:async k=>objects.get(k),
- get:async(k,opts)=>{const o=objects.get(k);if(!o)return null; const r=opts?.range; const response=new Response(r?o.bytes.subarray(r.offset,r.length?r.offset+r.length:undefined):o.bytes);response.etag=o.etag;return response;},
- put:async(k,data,opts={})=>{const old=objects.get(k);if(opts.onlyIf?.etagDoesNotMatch==='*'&&old||opts.onlyIf?.etagMatches&&old?.etag!==opts.onlyIf.etagMatches)return null;const o={key:k,etag:crypto.randomUUID(),bytes:Buffer.from(data),customMetadata:opts.customMetadata};objects.set(k,o);return o;},
- list:async({prefix})=>({objects:[...objects.values()].filter(o=>o.key.startsWith(prefix))}),delete:async k=>objects.delete(k)
-};
+import {Miniflare} from 'miniflare';
+import {readFile} from 'node:fs/promises';
+import {ManuscriptStore} from './src/storage.mjs';
+const runtime=new Miniflare({modules:true,script:'export default {fetch(){return new Response()}}',d1Databases:['DB'],compatibilityDate:'2026-02-01'});
+try {
+const db=await runtime.getD1Database('DB');
+const schema=await readFile(new URL('./migrations/0001_open_papers.sql',import.meta.url),'utf8');
+for(const sql of schema.split(';').filter(s=>s.trim()))await db.prepare(sql).run();
+const bucket=new ManuscriptStore(db);
+const big=new Uint8Array(5*1024*1024);
+big.fill(200,262140,262180);
+await bucket.put('test/large',big.buffer);
+assert.deepEqual(new Uint8Array(await (await bucket.get('test/large',{range:{offset:262142,length:20}})).arrayBuffer()),big.slice(262142,262162));
+assert.equal((await (await bucket.get('test/large')).arrayBuffer()).byteLength,big.length);
 const id=crypto.randomUUID(),base='/api/papers/'+id,publicPath='/api/publications/'+id;
 const cookies={};
 for(const user of ['author','other','editor']){
@@ -17,7 +24,7 @@ for(const user of ['author','other','editor']){
 }
 function call(path,user,fields){const headers=user?{Cookie:cookies[user]}:{};
 let body;if(fields){body=new FormData();for(const [k,v]of Object.entries(fields))body.set(k,v);headers.origin='https://unit.test';headers['content-length']='1200';}
-return worker.fetch(new Request('https://unit.test'+path,{headers,body,method:body?'POST':'GET'}),{BUCKET:bucket,EDITOR_GITHUB_ID:'editor'});}
+return worker.fetch(new Request('https://unit.test'+path,{headers,body,method:body?'POST':'GET'}),{DB:db,EDITOR_GITHUB_ID:'editor'});}
 const pdf=s=>new Blob(['%PDF-'+s]);const input={title:'A',authors:'B',claim:'C',format:'Essay',email:'b@example.org',disclosure:'',pdf:pdf('original')};
 assert.equal((await call(base,null,input)).status,401);assert.equal((await call(base,'author',input)).status,200);assert.equal((await call(base,'author',input)).status,200);
 assert.equal((await call(base,'other')).status,404);assert.equal((await call(publicPath)).status,404);assert.equal((await call('/api/editor','other')).status,403);
@@ -33,3 +40,5 @@ const released=await (await call(publicPath)).json();assert.equal(released.versi
 assert.equal(await (await call(publicPath+'/pdf')).text(),'%PDF-revision');assert.equal((await (await call('/api/publications')).json()).papers.length,1);
 await act('withdraw','editor');assert.equal((await call(publicPath+'/pdf')).status,404);assert.equal((await (await call('/api/publications')).json()).papers.length,0);
 console.log('Verified submit, retry, authorization, revisions, stale updates, author proof, release and withdrawal.');
+
+} finally { await runtime.dispose(); }

@@ -58,7 +58,7 @@ export async function published(request,bucket,path) {
   const [, , ,id,action]=path.split('/');
   if(!id){
     const cursor=new URL(request.url).searchParams.get('cursor')||undefined;
-    const objects=await bucket.list({prefix:'workflow/',limit:30,cursor});
+    const objects=await bucket.list({prefix:'workflow/',limit:5,cursor});
     const entries=await Promise.all(objects.objects.map(async o=>{
       const key=o.key.slice(9);
       const {state}=await loadWorkflow(bucket,key);
