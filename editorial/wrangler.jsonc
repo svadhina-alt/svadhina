@@ -4,6 +4,6 @@
   "compatibility_date":"2026-06-01",
   "workers_dev":true,
   "assets":{"directory":"public","binding":"ASSETS","run_worker_first":true},
-  "d1_databases":[{"binding":"DB","database_name":"svadhina-manuscripts"}],
+  "d1_databases":[{"binding":"DB","database_name":"svadhina-manuscripts","database_id":"01a2d7a5-208f-4c08-a90e-f23fb622ea58"}],
   "vars":{"EDITOR_GITHUB_ID":"268329256"}
 }
